@@ -16,11 +16,8 @@ BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
 player_pos = pygame.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 200)
 
 pygame.draw.rect(screen, BLACK, (0, 0, SCREEN_WIDTH, 5))
-    # Draw bottom border
 pygame.draw.rect(screen, BLACK, (0, SCREEN_WIDTH - 5, SCREEN_WIDTH, 5))
-    # Draw left border
 pygame.draw.rect(screen, BLACK, (0, 0, 5, SCREEN_WIDTH))
-    # Draw right border
 pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 5, 0, 5, SCREEN_WIDTH))
 
 
