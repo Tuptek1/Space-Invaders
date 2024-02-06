@@ -2,17 +2,24 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen_width = 1280
-screen_height = 720
-screen = pygame.display.set_mode((screen_width, screen_height))
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
+BLACK = (0, 0, 0)
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 running = True
 dt = 0
 
 VEL = 1100
-BORDER = pygame.Rect(0, 0, screen_width, screen_height)
+BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
 
-player_pos = pygame.Vector2(screen_width / 2 - 100, screen_height - 200)
+player_pos = pygame.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 200)
+
+pygame.draw.rect(screen, BLACK, (0, 0, SCREEN_WIDTH, 5))
+pygame.draw.rect(screen, BLACK, (0, SCREEN_WIDTH - 5, SCREEN_WIDTH, 5))
+pygame.draw.rect(screen, BLACK, (0, 0, 5, SCREEN_WIDTH))
+pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 5, 0, 5, SCREEN_WIDTH))
+
 
 while running:
     # poll for events
@@ -35,10 +42,13 @@ while running:
         player_pos.y -= VEL * dt
     if keys[pygame.K_s]:
         player_pos.y += VEL * dt
-    if keys[pygame.K_a] and  player_pos.x - VEL > 0:
+    if keys[pygame.K_a]:
         player_pos.x -= VEL * dt
     if keys[pygame.K_d]:
         player_pos.x += VEL * dt
+
+    player_pos.x = max(0, min(player_pos.x, SCREEN_WIDTH - 200))
+    player_pos.y = max(0, min(player_pos.y, SCREEN_HEIGHT - 200))
 
     pygame.display.update()
 
