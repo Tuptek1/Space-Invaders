@@ -9,7 +9,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-VEL = 1000
+VEL = 1100
 BORDER = pygame.Rect(0, 0, screen_width, screen_height)
 
 player_pos = pygame.Vector2(screen_width / 2 - 100, screen_height - 200)
