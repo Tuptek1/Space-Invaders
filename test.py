@@ -15,12 +15,6 @@ BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
 
 player_pos = pygame.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 200)
 
-pygame.draw.rect(screen, BLACK, (0, 0, SCREEN_WIDTH, 5))
-pygame.draw.rect(screen, BLACK, (0, SCREEN_WIDTH - 5, SCREEN_WIDTH, 5))
-pygame.draw.rect(screen, BLACK, (0, 0, 5, SCREEN_WIDTH))
-pygame.draw.rect(screen, BLACK, (SCREEN_WIDTH - 5, 0, 5, SCREEN_WIDTH))
-
-
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -31,24 +25,20 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    imp = pygame.image.load('./dd4af67c-c3f1-434e-9dad-659ef705893e.png').convert()
+    imp = pygame.image.load("./dd4af67c-c3f1-434e-9dad-659ef705893e.png").convert()
     imp = pygame.transform.scale(imp, (200, 200))
-    
-    shipRect = pygame.rect
-    screen.blit(imp, (player_pos, imp.get_size()))
-    
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= VEL * dt
-    if keys[pygame.K_s]:
-        player_pos.y += VEL * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= VEL * dt
-    if keys[pygame.K_d]:
-        player_pos.x += VEL * dt
 
-    player_pos.x = max(0, min(player_pos.x, SCREEN_WIDTH - 200))
-    player_pos.y = max(0, min(player_pos.y, SCREEN_HEIGHT - 200))
+    screen.blit(imp, (player_pos, imp.get_size()))
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w] and player_pos.y > (SCREEN_HEIGHT * 2 / 3):
+        player_pos.y -= VEL * dt
+    if keys[pygame.K_s] and player_pos.y < (SCREEN_HEIGHT - 200):
+        player_pos.y += VEL * dt
+    if keys[pygame.K_a] and player_pos.x > 0:
+        player_pos.x -= VEL * dt
+    if keys[pygame.K_d] and player_pos.x < (SCREEN_WIDTH - 200):
+        player_pos.x += VEL * dt
 
     pygame.display.update()
 
