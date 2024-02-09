@@ -2,20 +2,21 @@ import pygame
 
 # pygame setup
 pygame.init()
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-BLACK = (0, 0, 0)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Space Invaders")
-CLOCK = pygame.time.Clock()
-running = True
-DT = 0
-VEL = 1100
+
+BLACK = (0, 0, 0)
+VEL = 5
 FPS = 144
 
 
 # will be changed to a pixel art background
-SCREEN.fill("black")
+SPACE = pygame.transform.scale(
+    pygame.image.load("black_background.png"), (SCREEN_WIDTH, SCREEN_HEIGHT)
+)
 
 
 class Bullet:
@@ -37,36 +38,62 @@ class Friendly_Spaceship:
         ).convert()
         self.imp = pygame.transform.scale(self.imp, (200, 200))
 
-    def handle_movement(self, keys, player_pos):
-        if keys[pygame.K_w] and player_pos.y > (SCREEN_HEIGHT * 2 / 3):
-            player_pos.y -= VEL * DT
-        if keys[pygame.K_s] and player_pos.y < (SCREEN_HEIGHT - 200):
-            player_pos.y += VEL * DT
-        if keys[pygame.K_a] and player_pos.x > 0:
-            player_pos.x -= VEL * DT
-        if keys[pygame.K_d] and player_pos.x < (SCREEN_WIDTH - 200):
-            player_pos.x += VEL * DT
+    def handle_movement(self, keys):
+        print(self.player_pos.x)
+        print(self.player_pos.y)
+        if keys[pygame.K_w] and self.player_pos.y > (SCREEN_HEIGHT * 2 / 3):
+            self.player_pos.y -= VEL
+        if keys[pygame.K_s] and self.player_pos.y < (SCREEN_HEIGHT - 200):
+            self.player_pos.y += VEL
+        if keys[pygame.K_a] and self.player_pos.x > 0:
+            self.player_pos.x -= VEL
+        if keys[pygame.K_d] and self.player_pos.x < (SCREEN_WIDTH - 200):
+            self.player_pos.x += VEL
 
-    def draw_friendly_spaceship(self, imp, player_pos):
-        SCREEN.blit(imp, (player_pos, imp.get_size()))
+    def draw_friendly_spaceship(self):
+        SCREEN.blit(SPACE, (0, 0))
+        SCREEN.blit(self.imp, (self.player_pos.x, self.player_pos.y))
+        pygame.display.update()
+
+
+# friendly_spaceship = Friendly_Spaceship()
+# running = True
+# while running:
+#     DT = CLOCK.tick(144) / 1000
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             running = False
+
+#     # DT is delta time in seconds since last frame, used for framerate independent physics.
+
+#     keys = pygame.key.get_pressed()
+#     friendly_spaceship.handle_movement(keys, friendly_spaceship.player_pos)
+
+#     friendly_spaceship.draw_friendly_spaceship(
+#         friendly_spaceship.imp, friendly_spaceship.player_pos
+#     )
 
 
 friendly_spaceship = Friendly_Spaceship()
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
 
-    # DT is delta time in seconds since last frame, used for framerate independent physics.
 
-    keys = pygame.key.get_pressed()
-    friendly_spaceship.handle_movement(keys, friendly_spaceship.player_pos)
+def main():
+    CLOCK = pygame.time.Clock()
+    running = True
 
-    friendly_spaceship.draw_friendly_spaceship(
-        friendly_spaceship.imp, friendly_spaceship.player_pos
-    )
-    pygame.display.update()
+    while running:
+        CLOCK.tick(144)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    DT = CLOCK.tick(144) / 1000
+        keys = pygame.key.get_pressed()
+        friendly_spaceship.handle_movement(keys)
 
-pygame.quit()
+        friendly_spaceship.draw_friendly_spaceship()
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
