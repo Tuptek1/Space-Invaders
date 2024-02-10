@@ -25,7 +25,7 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    imp = pygame.image.load("./dd4af67c-c3f1-434e-9dad-659ef705893e.png").convert()
+    imp = pygame.image.load("./assets/images/spaceship.png").convert()
     imp = pygame.transform.scale(imp, (200, 200))
 
     screen.blit(imp, (player_pos, imp.get_size()))
