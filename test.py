@@ -1,4 +1,5 @@
 import pygame
+from bullet import Bullet
 
 # pygame setup
 pygame.init()
@@ -15,7 +16,11 @@ BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
 
 player_pos = pygame.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 200)
 
+bullet = Bullet()
+
 while running:
+
+    bullets = bullet.bullets_list
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -39,10 +44,12 @@ while running:
         player_pos.x -= VEL * dt
     if keys[pygame.K_d] and player_pos.x < (SCREEN_WIDTH - 200):
         player_pos.x += VEL * dt
+    if keys[pygame.K_SPACE]:
+        bullet.create_bullet(bullets, player_pos)
+
+    bullet.draw_bullet(screen, bullets)
 
     pygame.display.update()
-
-    # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(144) / 1000
