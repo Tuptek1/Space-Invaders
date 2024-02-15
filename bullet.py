@@ -18,8 +18,8 @@ class Bullet(pygame.sprite.Sprite):
         bullet = self.image
         bullets.append(bullet)
 
-    def draw_bullet(self, screen, bullets):
-        for bullet in bullets:
+    def draw_bullet(self, screen, bullet):
+        if self.bullet_pos.y > 0:
             self.bullet_pos.y += self.speed
-            screen.blit(bullet, self.bullet_pos)
-            print(self.bullet_pos)
+        screen.blit(bullet, self.bullet_pos)
+        print(self.bullet_pos)

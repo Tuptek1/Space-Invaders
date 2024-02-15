@@ -17,10 +17,11 @@ BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
 player_pos = pygame.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT - 200)
 
 bullet = Bullet()
+bullets = bullet.bullets_list
+
 
 while running:
 
-    bullets = bullet.bullets_list
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -47,7 +48,8 @@ while running:
     if keys[pygame.K_SPACE]:
         bullet.create_bullet(bullets, player_pos)
 
-    bullet.draw_bullet(screen, bullets)
+    for bullet_instance in bullets:
+        bullet.draw_bullet(screen, bullet_instance)
 
     pygame.display.update()
     # dt is delta time in seconds since last frame, used for framerate-
