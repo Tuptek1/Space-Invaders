@@ -21,14 +21,10 @@ bullets = bullet.bullets_list
 
 
 while running:
-
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
     imp = pygame.image.load("./assets/images/spaceship.png").convert()
@@ -52,8 +48,6 @@ while running:
         bullet.draw_bullet(screen, bullet_instance)
 
     pygame.display.update()
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    dt = clock.tick(144) / 1000
+    delta_time = clock.tick(144) / 1000
 
 pygame.quit()
