@@ -1,5 +1,10 @@
+import pygame
+
+dt = 0
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+VEL = 1100
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-VEL = 1100
+RED = (255, 0, 0)
+BLUE = (51, 131, 255)

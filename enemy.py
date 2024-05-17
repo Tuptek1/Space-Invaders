@@ -1,30 +1,29 @@
 import pygame
 import random
-
-RED = (255, 0, 0)
+from constants import RED, SCREEN_HEIGHT, SCREEN_WIDTH
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self):
         super().__init__()
-        self.image == pygame.image.load("./assets/images/enemy.png").convert()
-        self.image.fill(RED)
-        self.rect = self.image.get_rect()
-        self.rect.topLeft = (x, y)
+        self.enemy_image = pygame.image.load("./assets/images/Mage1.png").convert()
+        self.enemy_size = (100, 100)
+        self.enemy_image = pygame.transform.scale(self.enemy_image, self.enemy_size)
+        self.rect = self.enemy_image.get_rect()
         self.speed = 2
+        self.enemies_list = []
+        self.enemy_pos = (40, -100)
+        self.row_number = 1
 
-    def update(self, screenWidth):
-        self.rect.x += self.speed
-        if self.rect.right > screenWidth or self.rect.left <= 0:
-            self.rect.y += 40  # Move down
-            self.speed = -self.speed
+    def spawn_enemy(self, enemies_list):
+        enemies_list.append(self.enemy_pos)
+        self.enemy_pos = (self.enemy_pos[0] + 100, self.enemy_pos[1])
 
+    def spawn_enemy_row(self, enemies_list):
+        self.enemy_pos = (40, self.enemy_pos[1] + 100)
+        for _ in range(12):
+            self.spawn_enemy(enemies_list)
 
-enemies = pygame.sprite.Group()
-
-
-def spawn_enemy(screenWidth, screenHeight):
-    x = random.rand(0, screenWidth - 50)
-    y = random.rand(0, screenHeight - 50)
-    enemy = Enemy(x, y)
-    enemies.add(enemy)
+    def draw_enemy(self, screen, enemies_list):
+        for position in enemies_list:
+            screen.blit(self.enemy_image, position)

@@ -1,8 +1,5 @@
 import pygame
-
-WHITE = (255, 255, 255)
-RED = (255, 87, 51)
-BLUE = (51, 131, 255)
+from constants import BLUE
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -16,7 +13,6 @@ class Bullet(pygame.sprite.Sprite):
             bullet.y += self.velocity
             if bullet.y < 0:
                 bullets.remove(bullet)
-            # print(bullet)
 
     def draw_bullet(self, screen, bullets):
         for bullet in bullets:
