@@ -27,18 +27,22 @@ enemy_class = Enemy()
 
 def main():
     SCORE = 0
+    row_counter = 0
 
     clock = pygame.time.Clock()
     running = True
-    display_enemies = False
 
-    BORDER = pygame.Rect(0, 0, SCREEN_WIDTH, SCREEN_WIDTH)
     background_image = pygame.image.load("./assets/images/Map.png").convert()
     bullets_list = bullet_class.bullets_list
-    enemies_list = enemy_class.enemies_list
-    row_counter = 1
+    enemy_pos_list = enemy_class.enemy_pos_list
 
     while running:
+        for bullet in bullets_list:
+            for enemy in enemy_pos_list:
+                if pygame.rect.Rect.colliderect(bullet, enemy):
+                    SCORE += 1
+                    bullets_list.remove(bullet)
+                    enemy_class.enemy_pos_list.remove(enemy)
 
         def player_movement():
             keys = pygame.key.get_pressed()
@@ -57,18 +61,38 @@ def main():
 
         player_movement()
 
+        print(not enemy_pos_list)
+        print(enemy_class.enemy_pos)
+        print(row_counter)
+
+        if not enemy_pos_list:
+            enemy_class.enemy_pos = (40, -100)
+            row_counter = 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_g:
-                    display_enemies = True
-
-                    SCORE += 1
 
                     if row_counter < 5:
-                        enemy_class.spawn_enemy_row(enemies_list)
+                        enemy_class.move_enemy_y()
+                        enemy = enemy_class.enemy_image.get_rect(
+                            topleft=(enemy_class.enemy_pos[0], enemy_class.enemy_pos[1])
+                        )
+                        enemy_pos_list.append(enemy)
+
+                        for _ in range(11):
+                            enemy_class.move_enemy_x()
+                            enemy = enemy_class.enemy_image.get_rect(
+                                topleft=(
+                                    enemy_class.enemy_pos[0],
+                                    enemy_class.enemy_pos[1],
+                                )
+                            )
+                            enemy_pos_list.append(enemy)
+                        enemy_class.enemy_pos = (40, enemy_class.enemy_pos[1])
                         row_counter += 1
 
                 if event.key == pygame.K_SPACE:
@@ -90,10 +114,9 @@ def main():
         score_text = font.render(f"Score: {SCORE}", True, GREEN)
         screen.blit(score_text, SCORE_POS)
 
-        if display_enemies:
-            enemy_class.draw_enemy(screen, enemies_list)
-
         player_class.draw_player(screen)
+
+        enemy_class.draw_enemy(screen, enemy_pos_list)
 
         bullet_class.handle_bullet(bullets_list)
         bullet_class.draw_bullet(screen, bullets_list)
