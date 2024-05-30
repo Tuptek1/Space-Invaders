@@ -12,6 +12,10 @@ from constants import (
     dt,
     SCORE_POS,
     GREEN,
+    ENEMY_DRAGON_PATH_1,
+    ENEMY_GUARD_PATH_1,
+    ENEMY_MAGE_PATH_1,
+    HEALTH_POS,
 )
 
 
@@ -27,6 +31,7 @@ enemy_class = Enemy()
 
 def main():
     SCORE = 0
+    HEALTH = 10
     row_counter = 0
 
     clock = pygame.time.Clock()
@@ -37,9 +42,12 @@ def main():
     enemy_pos_list = enemy_class.enemy_pos_list
 
     while running:
+        if HEALTH == 0:
+            running = False
         for bullet in bullets_list:
             for enemy in enemy_pos_list:
-                if pygame.rect.Rect.colliderect(bullet, enemy):
+                print(enemy)
+                if pygame.rect.Rect.colliderect(bullet, enemy[1]):
                     SCORE += 1
                     bullets_list.remove(bullet)
                     enemy_class.enemy_pos_list.remove(enemy)
@@ -61,12 +69,9 @@ def main():
 
         player_movement()
 
-        print(not enemy_pos_list)
-        print(enemy_class.enemy_pos)
-        print(row_counter)
-
+        print(bullets_list)
         if not enemy_pos_list:
-            enemy_class.enemy_pos = (40, -100)
+            enemy_class.enemy_pos = (40, -70)
             row_counter = 1
 
         for event in pygame.event.get():
@@ -75,25 +80,58 @@ def main():
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_g:
-
                     if row_counter < 5:
                         enemy_class.move_enemy_y()
-                        enemy = enemy_class.enemy_image.get_rect(
-                            topleft=(enemy_class.enemy_pos[0], enemy_class.enemy_pos[1])
-                        )
-                        enemy_pos_list.append(enemy)
-
-                        for _ in range(11):
-                            enemy_class.move_enemy_x()
-                            enemy = enemy_class.enemy_image.get_rect(
-                                topleft=(
-                                    enemy_class.enemy_pos[0],
-                                    enemy_class.enemy_pos[1],
-                                )
-                            )
-                            enemy_pos_list.append(enemy)
                         enemy_class.enemy_pos = (40, enemy_class.enemy_pos[1])
                         row_counter += 1
+
+                        if row_counter == 2:
+                            enemy_image = pygame.image.load(
+                                ENEMY_DRAGON_PATH_1
+                            ).convert()
+                            enemy_image = pygame.transform.scale(
+                                enemy_image, enemy_class.enemy_size
+                            )
+                            for _ in range(12):
+                                enemy_rect = enemy_image.get_rect(
+                                    topleft=enemy_class.enemy_pos
+                                )
+                                enemy_pos_list.append(
+                                    (enemy_class.enemy_pos, enemy_rect, enemy_image)
+                                )
+                                enemy_class.move_enemy_x()
+
+                        if row_counter == 3:
+                            enemy_image = pygame.image.load(ENEMY_MAGE_PATH_1).convert()
+                            enemy_image = pygame.transform.scale(
+                                enemy_image, enemy_class.enemy_size
+                            )
+
+                            for _ in range(12):
+                                enemy_rect = enemy_image.get_rect(
+                                    topleft=enemy_class.enemy_pos
+                                )
+                                enemy_pos_list.append(
+                                    (enemy_class.enemy_pos, enemy_rect, enemy_image)
+                                )
+                                enemy_class.move_enemy_x()
+
+                        if row_counter == 4 or row_counter == 5:
+                            enemy_image = pygame.image.load(
+                                ENEMY_GUARD_PATH_1
+                            ).convert()
+                            enemy_image = pygame.transform.scale(
+                                enemy_image, enemy_class.enemy_size
+                            )
+
+                            for _ in range(12):
+                                enemy_rect = enemy_image.get_rect(
+                                    topleft=enemy_class.enemy_pos
+                                )
+                                enemy_pos_list.append(
+                                    (enemy_class.enemy_pos, enemy_rect, enemy_image)
+                                )
+                                enemy_class.move_enemy_x()
 
                 if event.key == pygame.K_SPACE:
                     # print(
@@ -112,11 +150,13 @@ def main():
         screen.blit(background_image, (0, 0))
 
         score_text = font.render(f"Score: {SCORE}", True, GREEN)
+        health_text = font.render(f"Health: {HEALTH}", True, RED)
         screen.blit(score_text, SCORE_POS)
+        screen.blit(health_text, HEALTH_POS)
 
         player_class.draw_player(screen)
 
-        enemy_class.draw_enemy(screen, enemy_pos_list)
+        enemy_class.draw_enemies(enemy_pos_list, screen)
 
         bullet_class.handle_bullet(bullets_list)
         bullet_class.draw_bullet(screen, bullets_list)

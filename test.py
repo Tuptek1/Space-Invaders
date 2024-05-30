@@ -1,27 +1,42 @@
 import pygame
 import random
+from constants import ENEMY_IMAGE_PATHS
 
 pygame.init()
 
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)
 
-# I changed the background color to black, because I understood it as that is what you want.
-BACKGROUND_COLOR = (0, 0, 0)  # tausta_vari
+BACKGROUND_COLOR = (0, 0, 0)
+clock = pygame.time.Clock()
 
-clock = pygame.time.Clock()  # kello
-star = pygame.Surface((32, 32))
-star.fill((255, 255, 255))
+enemy_image_list = ENEMY_IMAGE_PATHS
+enemy_pos_list = [
+    ((120, 120), enemy_image_list[0]),
+    ((220, 220), enemy_image_list[1]),
+    ((320, 320), enemy_image_list[2]),
+]
 
-planets = random.randrange(100, 500)
-positions = [(300, 50), (400, 27), (900, 55)]
 
-WIDTH, HEIGHT = (1000, 1000)  # (leveys, korkeus)
-screen = pygame.display.set_mode((WIDTH, HEIGHT))  # ikkuna
+def draw_enemies(enemy_pos_list):
+    # print(enemy_image_list)
+    for enemy in enemy_pos_list:
+
+        enemy_pos = enemy[0]
+
+        x_cord = enemy_pos[0]
+        y_cord = enemy_pos[1]
+        # print(image, enemy, x_cord, y_cord)
+        pygame.draw.rect(screen, WHITE, rect=enemy[1])
+        screen.blit(enemy[2], (x_cord, y_cord))
+        print(enemy_pos_list)
+
+
+WIDTH, HEIGHT = (1000, 1000)
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SpaceGenerationTest")
 
 display_stars = False
-running = True  # toiminnassa
+running = True  #
 while running:
 
     for event in pygame.event.get():
@@ -30,16 +45,11 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_g:
-                print("Generating World....")
-                print(planets)
                 display_stars = True
 
     screen.fill(BACKGROUND_COLOR)
 
     if display_stars:
-        for position in positions:
-            # This will create 3 stars because there're 3 elements in the list positions.
-            # To create more stars you'll need to add more in the list positions.
-            screen.blit(star, position)
+        draw_enemies(enemy_pos_list)
 
     pygame.display.update()

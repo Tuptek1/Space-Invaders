@@ -6,9 +6,7 @@ from constants import RED, SCREEN_HEIGHT, SCREEN_WIDTH, ENEMY_IMAGE_PATHS, BLACK
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.enemy_image = pygame.image.load(random.choice(ENEMY_IMAGE_PATHS)).convert()
-        self.enemy_size = (95, 95)
-        self.enemy_image = pygame.transform.scale(self.enemy_image, self.enemy_size)
+        self.enemy_size = (85, 85)
         self.speed = 2
         self.enemy_pos_list = []
         self.enemy_pos = (40, -100)
@@ -27,9 +25,13 @@ class Enemy(pygame.sprite.Sprite):
             self.enemy_pos[1] + 100,
         )
 
-    def draw_enemy(self, screen, enemies_list):
-        for enemy in enemies_list:
-            x_cord = enemy[0]
-            y_cord = enemy[1]
-            pygame.draw.rect(screen, WHITE, rect=enemy)
-            screen.blit(self.enemy_image, (x_cord, y_cord))
+    def draw_enemies(self, enemy_pos_list, screen):
+        for enemy in enemy_pos_list:
+            enemy_pos = enemy[0]
+
+            # print(enemy)
+            x_cord = enemy_pos[0]
+            y_cord = enemy_pos[1]
+            # print(image, enemy, x_cord, y_cord)
+            pygame.draw.rect(screen, WHITE, rect=enemy[1])
+            screen.blit(enemy[2], (x_cord, y_cord))
