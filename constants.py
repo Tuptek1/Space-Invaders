@@ -8,6 +8,8 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
+BACKGROUND_IMAGE = "./assets/images/Map.png"
+
 MAP_PATH = "./assets/images/Map.png"
 
 ENEMY_IMAGE_PATHS = [

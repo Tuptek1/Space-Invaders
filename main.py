@@ -1,23 +1,9 @@
+import random
 import pygame
 from player_bullet import Bullet
 from enemy import Enemy
 from player import Player
-from constants import (
-    WHITE,
-    RED,
-    BLACK,
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
-    VEL,
-    dt,
-    SCORE_POS,
-    GREEN,
-    ENEMY_DRAGON_PATH_1,
-    ENEMY_GUARD_PATH_1,
-    ENEMY_MAGE_PATH_1,
-    HEALTH_POS,
-)
-
+from constants import *
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -30,26 +16,26 @@ enemy_class = Enemy()
 
 
 def main():
+    clock = pygame.time.Clock()
     SCORE = 0
     HEALTH = 10
     row_counter = 0
-
-    clock = pygame.time.Clock()
     running = True
 
-    background_image = pygame.image.load("./assets/images/Map.png").convert()
-    bullets_list = bullet_class.bullets_list
+    background_image = pygame.image.load(BACKGROUND_IMAGE).convert()
+    player_bullets_list = []
+    enemy_bullets_list = []
     enemy_pos_list = enemy_class.enemy_pos_list
 
     while running:
         if HEALTH == 0:
             running = False
-        for bullet in bullets_list:
+
+        for bullet in player_bullets_list:
             for enemy in enemy_pos_list:
-                print(enemy)
                 if pygame.rect.Rect.colliderect(bullet, enemy[1]):
                     SCORE += 1
-                    bullets_list.remove(bullet)
+                    player_bullets_list.remove(bullet)
                     enemy_class.enemy_pos_list.remove(enemy)
 
         def player_movement():
@@ -69,7 +55,6 @@ def main():
 
         player_movement()
 
-        print(bullets_list)
         if not enemy_pos_list:
             enemy_class.enemy_pos = (40, -70)
             row_counter = 1
@@ -78,6 +63,8 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f:
+                    enemy_class.enemy_shoot(enemy_pos_list, enemy_bullets_list)
 
                 if event.key == pygame.K_g:
                     if row_counter < 5:
@@ -134,18 +121,16 @@ def main():
                                 enemy_class.move_enemy_x()
 
                 if event.key == pygame.K_SPACE:
-                    # print(
-                    #     player_class.player_pos.y,
-                    #     player_class.player_pos.x // 2,
-                    # )
-                    bullet = pygame.Rect(
+
+                    player_bullet = pygame.Rect(
                         (player_class.player_pos.x - 2.5)
                         + (player_class.player_size[0] // 2),
                         player_class.player_pos.y,
                         5,
                         20,
                     )
-                    bullets_list.append(bullet)
+
+                    player_bullets_list.append(player_bullet)
 
         screen.blit(background_image, (0, 0))
 
@@ -158,8 +143,9 @@ def main():
 
         enemy_class.draw_enemies(enemy_pos_list, screen)
 
-        bullet_class.handle_bullet(bullets_list)
-        bullet_class.draw_bullet(screen, bullets_list)
+        bullet_class.handle_enemy_bullet(enemy_bullets_list)
+        bullet_class.handle_player_bullet(player_bullets_list)
+        bullet_class.draw_bullet(screen, player_bullets_list, enemy_bullets_list)
 
         pygame.display.update()
         dt = clock.tick(144) / 1000
